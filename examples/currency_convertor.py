@@ -21,7 +21,7 @@ class Form(QDialog):
 		self.fromSpinBox.setValue(1.00)
 		self.toComboBox = QComboBox()
 		self.toComboBox.addItems(rates)
-		self.toLabel = QLabel("1.00")
+		self.toLabel = QLabel("1.0000")
 
 		grid = QGridLayout()
 		grid.addWidget(dateLabel, 0, 0)
@@ -40,7 +40,7 @@ class Form(QDialog):
 		from_ = str(self.fromComboBox.currentText())
 		amount = (self.rates[from_]/self.rates[to]) * \
 				  self.fromSpinBox.value()
-		self.toLabel.setText("{:0.2f}".format(amount))
+		self.toLabel.setText("{:0.4f}".format(amount))
 
 	def getdata(self):
 		self.rates = {}
