@@ -15,6 +15,7 @@ class StringListDlg(QDialog):
 
 		self.fruitList = QListWidget()
 		self.fruitList.addItems(self.stringlist)
+		self.fruitList.setCurrentRow(0)
 		button_Add = QPushButton("&Add...")
 		button_Edit = QPushButton("&Edit...")
 		button_Remove = QPushButton("&Remove...")
@@ -36,8 +37,14 @@ class StringListDlg(QDialog):
 		self.setWindowTitle("Edit Fruit List")
 
 		button_Add.clicked.connect(self.Add_Win)
+		button_Edit.clicked.connect(self.Edit_Win)
 		button_Sort.clicked.connect(self.Sort)
 		button_Remove.clicked.connect(self.Remove_Win)
+		button_Up.clicked.connect(self.Up)
+		button_Down.clicked.connect(self.Down)
+
+
+		button_Close.clicked.connect(self.reject)
 
 
 	def Add_Win(self):
@@ -49,9 +56,32 @@ class StringListDlg(QDialog):
 			else:
 				QMessageBox.warning(self, "Warning", "{} already in list".format(dialog.edit.text()))
 
+	def Edit_Win(self):
+		dialog = Edit(label="Edit Fruit", parent=self)
+		dialog.edit.setText(self.fruitList.currentItem().text())
+		dialog.buttons.accepted.connect(dialog.accept)
+		if dialog.exec_():
+			self.fruitList.currentItem().setText(dialog.edit.text())
+
 	def Remove_Win(self):
 		for item in self.fruitList.selectedItems():
 			self.fruitList.takeItem(self.fruitList.row(item))
+
+	def Up(self):
+		item = self.fruitList.selectedItems()[0]
+		row = self.fruitList.row(item)
+		if row > 0:
+			self.fruitList.takeItem(row)
+			self.fruitList.insertItem(row-1, item)
+			self.fruitList.setCurrentRow(row-1)
+
+	def Down(self):
+		item = self.fruitList.selectedItems()[0]
+		row = self.fruitList.row(item)
+		if row < len(self.fruitList)-1:
+			self.fruitList.takeItem(row)
+			self.fruitList.insertItem(row+1, item)
+			self.fruitList.setCurrentRow(row+1)		
 
 	def Sort(self):
 		self.fruitList.sortItems()
